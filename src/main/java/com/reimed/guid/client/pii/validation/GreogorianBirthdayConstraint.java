@@ -27,23 +27,29 @@ import lombok.val;
 import net.sf.rubycollect4j.RubyDate;
 
 @Value
-public class GreogorianBirthdayValidator implements Validator<Birthday> {
+public class GreogorianBirthdayConstraint
+    implements FactorConstraint<Birthday> {
 
   @Override
-  public ValidationError validate(@NonNull Birthday value) {
+  public Class<Birthday> getTargetType() {
+    return Birthday.class;
+  }
+
+  @Override
+  public FactorConstraintError apply(@NonNull Birthday value) {
     val yearOfBirth = value.getYearOfBirth();
     val monthOfBirth = value.getMonthOfBirth();
     val dayOfBirth = value.getDayOfBirth();
 
     int currentYear = RubyDate.current().year();
     if (!range(currentYear - 150, currentYear + 1).includeʔ(yearOfBirth)) {
-      return new ValidationError(Birthday.class,
+      return new FactorConstraintError(value.getClass(),
           "Year of birth must be between " + (currentYear - 150) + " and "
               + (currentYear + 1));
     }
 
     if (!range(1, 12).includeʔ(monthOfBirth)) {
-      return new ValidationError(Birthday.class,
+      return new FactorConstraintError(value.getClass(),
           "Month of birth must be between 1 and 12");
     }
 
@@ -56,19 +62,19 @@ public class GreogorianBirthdayValidator implements Validator<Birthday> {
       case 10:
       case 12:
         if (!range(1, 31).includeʔ(value.getDayOfBirth())) {
-          return new ValidationError(Birthday.class,
+          return new FactorConstraintError(value.getClass(),
               "Day of birth must be between 1 and 31");
         }
       case 2:
         if ((yearOfBirth % 4 == 0 && yearOfBirth % 100 != 0)
             || yearOfBirth % 400 == 0) {
           if (!range(1, 29).includeʔ(dayOfBirth)) {
-            return new ValidationError(Birthday.class,
+            return new FactorConstraintError(value.getClass(),
                 "Day of birth must be between 1 and 29");
           }
         } else {
           if (!range(1, 28).includeʔ(dayOfBirth)) {
-            return new ValidationError(Birthday.class,
+            return new FactorConstraintError(value.getClass(),
                 "Day of birth must be between 1 and 28");
           }
         }
@@ -77,7 +83,7 @@ public class GreogorianBirthdayValidator implements Validator<Birthday> {
       case 9:
       case 11:
         if (!range(1, 30).includeʔ(dayOfBirth)) {
-          return new ValidationError(Birthday.class,
+          return new FactorConstraintError(value.getClass(),
               "Day of birth must be between 1 and 30");
         }
     }

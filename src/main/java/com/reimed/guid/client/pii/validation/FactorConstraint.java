@@ -17,8 +17,10 @@
  */
 package com.reimed.guid.client.pii.validation;
 
-public interface Validator<T> {
+public interface FactorConstraint<T> {
 
-  public ValidationError validate(T value);
+  public Class<T> getTargetType();
+
+  public FactorConstraintError apply(T value);
 
 }

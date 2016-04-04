@@ -15,14 +15,9 @@
  * the License.
  *
  */
-package com.reimed.guid.client;
+package com.reimed.guid.client.pii;
 
-import java.util.Iterator;
-import java.util.List;
-
-import com.reimed.guid.client.pii.Nation;
-import com.reimed.guid.client.pii.PII;
-import com.reimed.guid.client.pii.Sex;
+import com.neovisionaries.i18n.CountryCode;
 
 import lombok.Builder;
 import lombok.NonNull;
@@ -30,7 +25,7 @@ import lombok.Value;
 
 @Builder
 @Value
-public class PIIHashBundle implements PII, HashBundle, Iterable<String> {
+public class BasePII implements PII {
 
   @NonNull
   String surname;
@@ -48,7 +43,7 @@ public class PIIHashBundle implements PII, HashBundle, Iterable<String> {
   int dayOfBirth;
 
   @NonNull
-  Nation nationality;
+  CountryCode nationality;
 
   @NonNull
   String nationalId;
@@ -56,9 +51,9 @@ public class PIIHashBundle implements PII, HashBundle, Iterable<String> {
   @NonNull
   String birthplace;
 
-  PIIHashBundle(String surname, String givenName, Sex gender, int yearOfBirth,
-      int monthOfBirth, int dayOfBirth, Nation nationality, String nationalId,
-      String birthplace) {
+  BasePII(String surname, String givenName, Sex gender, int yearOfBirth,
+      int monthOfBirth, int dayOfBirth, CountryCode nationality,
+      String nationalId, String birthplace) {
     this.surname = surname.toUpperCase().trim();
     this.givenName = givenName.toUpperCase().trim();
     this.gender = gender;
@@ -68,17 +63,6 @@ public class PIIHashBundle implements PII, HashBundle, Iterable<String> {
     this.nationality = nationality;
     this.nationalId = nationalId.toUpperCase().trim();
     this.birthplace = birthplace.toUpperCase().trim();
-    PIIValidationFactory.validate(this);
-  }
-
-  @Override
-  public List<String> getHashCodes() {
-    return PIIHashCoderFactory.getHashCoder().getHashCodes(this);
-  }
-
-  @Override
-  public Iterator<String> iterator() {
-    return getHashCodes().iterator();
   }
 
 }

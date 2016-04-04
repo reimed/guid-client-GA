@@ -23,32 +23,43 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value
-public class UpperCaseNameValidator implements Validator<Name> {
+public class UpperCaseNameConstraint implements FactorConstraint<Name> {
 
   @Override
-  public ValidationError validate(@NonNull Name value) {
+  public Class<Name> getTargetType() {
+    return Name.class;
+  }
+
+  @Override
+  public FactorConstraintError apply(@NonNull Name value) {
     if (value.getSurname().trim().isEmpty()) {
-      return new ValidationError(Name.class, "Surname cannot be empty");
+      return new FactorConstraintError(value.getClass(),
+          "Surname cannot be empty");
     }
 
     if (value.getGivenName().trim().isEmpty()) {
-      return new ValidationError(Name.class, "Given name cannot be empty");
+      return new FactorConstraintError(value.getClass(),
+          "Given name cannot be empty");
     }
 
     if (!value.getSurname().trim().equals(value.getSurname())) {
-      return new ValidationError(Name.class, "Surname hasn't been trimmed");
+      return new FactorConstraintError(value.getClass(),
+          "Surname hasn't been trimmed");
     }
 
     if (!value.getGivenName().trim().equals(value.getGivenName())) {
-      return new ValidationError(Name.class, "Given name hasn't been trimmed");
+      return new FactorConstraintError(value.getClass(),
+          "Given name hasn't been trimmed");
     }
 
     if (!value.getSurname().toUpperCase().equals(value.getSurname())) {
-      return new ValidationError(Name.class, "Surname hasn't been upcased");
+      return new FactorConstraintError(value.getClass(),
+          "Surname hasn't been upcased");
     }
 
     if (!value.getGivenName().toUpperCase().equals(value.getGivenName())) {
-      return new ValidationError(Name.class, "Given name hasn't been upcased");
+      return new FactorConstraintError(value.getClass(),
+          "Given name hasn't been upcased");
     }
 
     return null;

@@ -21,6 +21,6 @@ import java.util.List;
 
 public interface HashBundle {
 
-  public List<String> getHashCodes();
+  List<String> getHashCodes();
 
 }

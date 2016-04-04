@@ -18,6 +18,13 @@
 	</repositories>
 
 	<dependencies>
+		<!-- i18n -->
+		<dependency>
+			<groupId>com.neovisionaries</groupId>
+			<artifactId>nv-i18n</artifactId>
+			<version>1.18</version>
+		</dependency>
+
 		<!-- Lang -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

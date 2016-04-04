@@ -17,27 +17,35 @@
  */
 package com.reimed.guid.client.pii.validation;
 
-import com.reimed.guid.client.pii.Name;
 import com.reimed.guid.client.pii.NationalId;
 
 import lombok.NonNull;
 import lombok.Value;
 
 @Value
-public class UpperCaseNationalIdValidator implements Validator<NationalId> {
+public class UpperCaseNationalIdConstraint
+    implements FactorConstraint<NationalId> {
 
   @Override
-  public ValidationError validate(@NonNull NationalId value) {
+  public Class<NationalId> getTargetType() {
+    return NationalId.class;
+  }
+
+  @Override
+  public FactorConstraintError apply(@NonNull NationalId value) {
     if (value.getNationalId().trim().isEmpty()) {
-      return new ValidationError(Name.class, "National Id cannot be empty");
+      return new FactorConstraintError(value.getClass(),
+          "National Id cannot be empty");
     }
 
     if (!value.getNationalId().trim().equals(value.getNationalId())) {
-      return new ValidationError(Name.class, "National Id hasn't been trimmed");
+      return new FactorConstraintError(value.getClass(),
+          "National Id hasn't been trimmed");
     }
 
     if (!value.getNationalId().toUpperCase().equals(value.getNationalId())) {
-      return new ValidationError(Name.class, "National Id hasn't been upcased");
+      return new FactorConstraintError(value.getClass(),
+          "National Id hasn't been upcased");
     }
 
     return null;

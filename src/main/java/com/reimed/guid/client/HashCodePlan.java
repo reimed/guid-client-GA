@@ -15,22 +15,15 @@
  * the License.
  *
  */
+
 package com.reimed.guid.client;
 
-import com.google.common.base.Function;
+import com.reimed.guid.client.pii.validation.FactorValidator;
 
-public final class GuidClientConfig {
+public interface HashCodePlan {
 
-  private GuidClientConfig() {}
+  HashCoder getHashCoder();
 
-  private static Function<Void, Void> setup;
-
-  public static void setSetup(Function<Void, Void> setup) {
-    GuidClientConfig.setup = setup;
-  }
-
-  public static Function<Void, Void> getSetup() {
-    return setup;
-  }
+  FactorValidator getValidator();
 
 }

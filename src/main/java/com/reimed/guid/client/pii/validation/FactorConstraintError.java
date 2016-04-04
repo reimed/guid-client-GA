@@ -15,24 +15,15 @@
  * the License.
  *
  */
-package com.reimed.guid.client;
+package com.reimed.guid.client.pii.validation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import lombok.Value;
 
-import lombok.NonNull;
+@Value
+public class FactorConstraintError {
 
-public final class PIIHashCoderFactory {
+  Class<?> type;
 
-  private PIIHashCoderFactory() {}
-
-  private static HashCoder hashCoder;
-
-  public static HashCoder getHashCoder() {
-    return checkNotNull(hashCoder, "PII HashCoder hasn't been set");
-  }
-
-  public static void setHashCoder(@NonNull HashCoder hashCoder) {
-    PIIHashCoderFactory.hashCoder = hashCoder;
-  }
+  String message;
 
 }

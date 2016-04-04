@@ -49,9 +49,9 @@ public class HashCoder {
   @NonNull
   HashCodeSetFuction setFunction;
 
-  HashCoder(HashFunction hashingFunction, HashCodeTemplate template,
+  HashCoder(HashFunction hashFunction, HashCodeTemplate template,
       final String delimiter, HashCodeSetFuction setFunction) {
-    this.hashingFunction = hashingFunction != null ? hashingFunction : sha512();
+    this.hashingFunction = hashFunction != null ? hashFunction : sha512();
     this.template = template;
     this.delimiter = delimiter != null ? delimiter : "_";
     val deli = this.delimiter;
@@ -75,7 +75,7 @@ public class HashCoder {
         };
   }
 
-  public List<String> getHashCodes(Object... objects) {
+  public List<String> hashObjects(Object... objects) {
     Map<String, Object> factors = FactorExtractor.extract(objects);
 
     List<String> hashCodes = newArrayList();

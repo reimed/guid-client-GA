@@ -18,26 +18,34 @@
 package com.reimed.guid.client.pii.validation;
 
 import com.reimed.guid.client.pii.Birthplace;
-import com.reimed.guid.client.pii.Name;
 
 import lombok.NonNull;
 import lombok.Value;
 
 @Value
-public class UpperCaseBirthplaceValidator implements Validator<Birthplace> {
+public class UpperCaseBirthplaceConstraint
+    implements FactorConstraint<Birthplace> {
 
   @Override
-  public ValidationError validate(@NonNull Birthplace value) {
+  public Class<Birthplace> getTargetType() {
+    return Birthplace.class;
+  }
+
+  @Override
+  public FactorConstraintError apply(@NonNull Birthplace value) {
     if (value.getBirthplace().trim().isEmpty()) {
-      return new ValidationError(Name.class, "Birthplace cannot be empty");
+      return new FactorConstraintError(value.getClass(),
+          "Birthplace cannot be empty");
     }
 
     if (!value.getBirthplace().trim().equals(value.getBirthplace())) {
-      return new ValidationError(Name.class, "Birthplace hasn't been trimmed");
+      return new FactorConstraintError(value.getClass(),
+          "Birthplace hasn't been trimmed");
     }
 
     if (!value.getBirthplace().toUpperCase().equals(value.getBirthplace())) {
-      return new ValidationError(Name.class, "Birthplace hasn't been upcased");
+      return new FactorConstraintError(value.getClass(),
+          "Birthplace hasn't been upcased");
     }
 
     return null;

@@ -20,10 +20,18 @@ package com.reimed.guid.client.pii.validation;
 import lombok.Value;
 
 @Value
-public class ValidationError {
+public class FactorConstraints {
 
-  Class<?> type;
+  public static final GreogorianBirthdayConstraint greogorianBirthday =
+      new GreogorianBirthdayConstraint();
 
-  String message;
+  public static final UpperCaseBirthplaceConstraint upperCaseBirthplace =
+      new UpperCaseBirthplaceConstraint();
+
+  public static final UpperCaseNameConstraint upperCaseName =
+      new UpperCaseNameConstraint();
+
+  public static final UpperCaseNationalIdConstraint upperCaseNationalId =
+      new UpperCaseNationalIdConstraint();
 
 }
