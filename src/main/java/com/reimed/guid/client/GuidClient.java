@@ -106,7 +106,7 @@ public final class GuidClient {
    * @throws IOException
    *           if request failed
    */
-  public List<Set<PublicGuid>> group(Collection<PublicGuid> guids)
+  public List<Set<PublicGuid>> group(@NonNull Collection<PublicGuid> guids)
       throws IOException {
     ResourceDocument<GuidSet<PublicGuid>> req =
         resourceDocument(new GuidSet<PublicGuid>(guids), "guids");
