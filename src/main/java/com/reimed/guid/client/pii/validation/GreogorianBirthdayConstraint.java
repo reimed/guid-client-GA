@@ -65,6 +65,7 @@ public class GreogorianBirthdayConstraint
           return new FactorConstraintError(value.getClass(),
               "Day of birth must be between 1 and 31");
         }
+        break;
       case 2:
         if ((yearOfBirth % 4 == 0 && yearOfBirth % 100 != 0)
             || yearOfBirth % 400 == 0) {
@@ -78,6 +79,7 @@ public class GreogorianBirthdayConstraint
                 "Day of birth must be between 1 and 28");
           }
         }
+        break;
       case 4:
       case 6:
       case 9:
@@ -86,6 +88,7 @@ public class GreogorianBirthdayConstraint
           return new FactorConstraintError(value.getClass(),
               "Day of birth must be between 1 and 30");
         }
+        break;
     }
 
     return null;
