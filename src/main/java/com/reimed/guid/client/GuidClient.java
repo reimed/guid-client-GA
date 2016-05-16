@@ -16,11 +16,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import lombok.NonNull;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+
+import tw.guid.central.core.GuidSet;
+import tw.guid.central.core.PrefixedHashBundle;
+import tw.guid.central.core.PublicGuid;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,11 +36,6 @@ import com.github.wnameless.jsonapi.ResourcesDocument;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 
-import lombok.NonNull;
-import tw.guid.central.core.GuidSet;
-import tw.guid.central.core.PrefixedHashBundle;
-import tw.guid.central.core.PublicGuid;
-
 public final class GuidClient {
 
   private static final String API_ENDPOINT = "/api/v1";
@@ -42,6 +43,12 @@ public final class GuidClient {
   private final String apiUrl;
   private final HttpClient httpClient;
   private final ObjectMapper mapper = new ObjectMapper();
+
+  public GuidClient(@NonNull URI centralServer, @NonNull String username,
+      @NonNull String password) {
+    apiUrl = centralServer.toString().replaceFirst("/$", "") + API_ENDPOINT;
+    httpClient = BasicAuthSSLClient.create(username, password);
+  }
 
   public GuidClient(@NonNull URI centralServer, PublicKey pubKey) {
     this(centralServer, base64Url().encode(pubKey.getEncoded()));
@@ -54,8 +61,8 @@ public final class GuidClient {
 
   public PublicGuid compute(@NonNull String prefix,
       @NonNull HashBundle hashBundle) throws IOException {
-    return compute(prefix, hashBundle.getHashCodes().get(0),
-        hashBundle.getHashCodes().get(1), hashBundle.getHashCodes().get(2));
+    return compute(prefix, hashBundle.getHashCodes().get(0), hashBundle
+        .getHashCodes().get(1), hashBundle.getHashCodes().get(2));
   }
 
   /**
@@ -89,8 +96,9 @@ public final class GuidClient {
 
     HttpResponse res = httpClient.execute(post);
     String json = IOUtils.toString(res.getEntity().getContent());
-    ResourceDocument<PublicGuid> guid = mapper.readValue(json,
-        new TypeReference<ResourceDocument<PublicGuid>>() {});
+    ResourceDocument<PublicGuid> guid =
+        mapper.readValue(json,
+            new TypeReference<ResourceDocument<PublicGuid>>() {});
 
     return guid.getData().getAttributes();
   }
@@ -117,15 +125,15 @@ public final class GuidClient {
 
     HttpResponse res = httpClient.execute(post);
     String json = IOUtils.toString(res.getEntity().getContent());
-    ResourcesDocument<GuidSet<PublicGuid>> sets = mapper.readValue(json,
-        new TypeReference<ResourcesDocument<GuidSet<PublicGuid>>>() {});
+    ResourcesDocument<GuidSet<PublicGuid>> sets =
+        mapper.readValue(json,
+            new TypeReference<ResourcesDocument<GuidSet<PublicGuid>>>() {});
 
     return newArrayList(Iterables.transform(sets.getData(),
         new Function<ResourceObject<GuidSet<PublicGuid>>, Set<PublicGuid>>() {
 
           @Override
-          public Set<PublicGuid> apply(
-              ResourceObject<GuidSet<PublicGuid>> input) {
+          public Set<PublicGuid> apply(ResourceObject<GuidSet<PublicGuid>> input) {
             return input.getAttributes().getSet();
           }
 
