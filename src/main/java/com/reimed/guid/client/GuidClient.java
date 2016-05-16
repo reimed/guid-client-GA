@@ -22,8 +22,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 
+import tw.guid.central.core.GuidHashCodes;
 import tw.guid.central.core.GuidSet;
 import tw.guid.central.core.PrefixedHashBundle;
 import tw.guid.central.core.PublicGuid;
@@ -138,6 +140,56 @@ public final class GuidClient {
           }
 
         }));
+  }
+
+  /**
+   * Requests a loaned GUID.
+   * 
+   * @param prefix
+   *          of the loaned GUID
+   * @return a public GUID
+   * @throws IOException
+   *           if request failed
+   */
+  public PublicGuid loan(@NonNull String prefix) throws IOException {
+    HttpPost post = new HttpPost(apiUrl + "/loans/" + prefix);
+    post.addHeader("Content-Type", "application/json");
+
+    HttpResponse res = httpClient.execute(post);
+    String json = IOUtils.toString(res.getEntity().getContent());
+    ResourceDocument<PublicGuid> guid =
+        mapper.readValue(json,
+            new TypeReference<ResourceDocument<PublicGuid>>() {});
+
+    return guid.getData().getAttributes();
+  }
+
+  /**
+   * Settles a loaned GUID to make it a valid permanent GUID.
+   * 
+   * @param publicGuid
+   *          a loaned GUID
+   * @param hashCodes
+   *          hash codes if the loaned GUID
+   * @return a public GUID
+   * @throws IOException
+   *           if request failed
+   */
+  public PublicGuid settleLoan(PublicGuid publicGuid, GuidHashCodes hashCodes)
+      throws IOException {
+    HttpPut put =
+        new HttpPut(apiUrl + "/loans/" + publicGuid.getPrefix() + "/"
+            + publicGuid.getCode());
+    put.addHeader("Content-Type", "application/json");
+    put.setEntity(new StringEntity(mapper.writeValueAsString(hashCodes), UTF_8));
+
+    HttpResponse res = httpClient.execute(put);
+    String json = IOUtils.toString(res.getEntity().getContent());
+    ResourceDocument<PublicGuid> guid =
+        mapper.readValue(json,
+            new TypeReference<ResourceDocument<PublicGuid>>() {});
+
+    return guid.getData().getAttributes();
   }
 
 }
