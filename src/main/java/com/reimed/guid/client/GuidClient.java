@@ -62,12 +62,6 @@ public final class GuidClient {
   }
 
   public PublicGuid compute(@NonNull String prefix,
-      @NonNull HashBundle hashBundle) throws IOException {
-    List<String> hashCodes = hashBundle.getHashCodes();
-    return compute(prefix, hashCodes.get(0), hashCodes.get(1), hashCodes.get(2));
-  }
-
-  public PublicGuid compute(@NonNull String prefix,
       @NonNull GuidHashCodes hashCodes) throws IOException {
     return compute(prefix, hashCodes.getHash1(), hashCodes.getHash2(),
         hashCodes.getHash3());

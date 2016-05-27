@@ -25,7 +25,6 @@ public class HashCodeItem implements Iterable<String> {
     return HashCodeItem.builder().field(field).build();
   }
 
-  @SafeVarargs
   public static HashCodeItem combo(String field1, String field2,
       String... fields) {
     return HashCodeItem.builder().field(field1).field(field2)

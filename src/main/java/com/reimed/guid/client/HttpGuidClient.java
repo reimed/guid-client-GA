@@ -17,10 +17,23 @@
  */
 package com.reimed.guid.client;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-public interface HashBundle {
+import tw.guid.central.core.GuidHashCodes;
+import tw.guid.central.core.PublicGuid;
 
-  List<String> getHashCodes();
+import com.google.common.base.Optional;
+
+public interface HttpGuidClient {
+
+  Optional<PublicGuid> compute(String prefix, GuidHashCodes hashCodes);
+
+  Optional<List<Set<PublicGuid>>> group(Collection<PublicGuid> guids);
+
+  Optional<PublicGuid> loan(String prefix);
+
+  Optional<PublicGuid> settleLoan(PublicGuid publicGuid, GuidHashCodes hashCodes);
 
 }
