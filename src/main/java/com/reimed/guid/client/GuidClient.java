@@ -177,11 +177,14 @@ public final class GuidClient {
    */
   public PublicGuid settleLoan(PublicGuid publicGuid, GuidHashCodes hashCodes)
       throws IOException {
+    ResourceDocument<GuidHashCodes> req =
+        resourceDocument(hashCodes, "hashcodes");
+
     HttpPut put =
         new HttpPut(apiUrl + "/loans/" + publicGuid.getPrefix() + "/"
             + publicGuid.getCode());
     put.addHeader("Content-Type", "application/json");
-    put.setEntity(new StringEntity(mapper.writeValueAsString(hashCodes), UTF_8));
+    put.setEntity(new StringEntity(mapper.writeValueAsString(req), UTF_8));
 
     HttpResponse res = httpClient.execute(put);
     String json = IOUtils.toString(res.getEntity().getContent());

@@ -24,16 +24,17 @@ import java.util.Set;
 import tw.guid.central.core.GuidHashCodes;
 import tw.guid.central.core.PublicGuid;
 
-import com.google.common.base.Optional;
+import com.google.common.base.HttpOptional;
 
 public interface HttpGuidClient {
 
-  Optional<PublicGuid> compute(String prefix, GuidHashCodes hashCodes);
+  HttpOptional<PublicGuid> compute(String prefix, GuidHashCodes hashCodes);
 
-  Optional<List<Set<PublicGuid>>> group(Collection<PublicGuid> guids);
+  HttpOptional<List<Set<PublicGuid>>> group(Collection<PublicGuid> guids);
 
-  Optional<PublicGuid> loan(String prefix);
+  HttpOptional<PublicGuid> loan(String prefix);
 
-  Optional<PublicGuid> settleLoan(PublicGuid publicGuid, GuidHashCodes hashCodes);
+  HttpOptional<PublicGuid> settleLoan(PublicGuid publicGuid,
+      GuidHashCodes hashCodes);
 
 }
