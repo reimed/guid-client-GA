@@ -19,6 +19,6 @@ package com.reimed.guid.client.pii;
 
 public enum Sex {
 
-  FEMALE, MALE, INIERSEX;
+  FEMALE, MALE, INTERSEX;
 
 }
