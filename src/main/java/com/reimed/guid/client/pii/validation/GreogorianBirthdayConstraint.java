@@ -17,14 +17,16 @@
  */
 package com.reimed.guid.client.pii.validation;
 
-import static net.sf.rubycollect4j.RubyCollections.range;
+import java.util.Calendar;
 
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
+import com.google.common.collect.Range;
 import com.reimed.guid.client.pii.Birthday;
 
 import lombok.NonNull;
 import lombok.Value;
 import lombok.val;
-import net.sf.rubycollect4j.RubyDate;
 
 @Value
 public class GreogorianBirthdayConstraint
@@ -41,14 +43,14 @@ public class GreogorianBirthdayConstraint
     val monthOfBirth = value.getMonthOfBirth();
     val dayOfBirth = value.getDayOfBirth();
 
-    int currentYear = RubyDate.current().year();
-    if (!range(currentYear - 150, currentYear + 1).includeʔ(yearOfBirth)) {
+    int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+    if (!range(currentYear - 150, currentYear + 1).contains(yearOfBirth)) {
       return new FactorConstraintError(value.getClass(),
           "Year of birth must be between " + (currentYear - 150) + " and "
               + (currentYear + 1));
     }
 
-    if (!range(1, 12).includeʔ(monthOfBirth)) {
+    if (!range(1, 12).contains(monthOfBirth)) {
       return new FactorConstraintError(value.getClass(),
           "Month of birth must be between 1 and 12");
     }
@@ -61,7 +63,7 @@ public class GreogorianBirthdayConstraint
       case 8:
       case 10:
       case 12:
-        if (!range(1, 31).includeʔ(value.getDayOfBirth())) {
+        if (!range(1, 31).contains(value.getDayOfBirth())) {
           return new FactorConstraintError(value.getClass(),
               "Day of birth must be between 1 and 31");
         }
@@ -69,12 +71,12 @@ public class GreogorianBirthdayConstraint
       case 2:
         if ((yearOfBirth % 4 == 0 && yearOfBirth % 100 != 0)
             || yearOfBirth % 400 == 0) {
-          if (!range(1, 29).includeʔ(dayOfBirth)) {
+          if (!range(1, 29).contains(dayOfBirth)) {
             return new FactorConstraintError(value.getClass(),
                 "Day of birth must be between 1 and 29");
           }
         } else {
-          if (!range(1, 28).includeʔ(dayOfBirth)) {
+          if (!range(1, 28).contains(dayOfBirth)) {
             return new FactorConstraintError(value.getClass(),
                 "Day of birth must be between 1 and 28");
           }
@@ -84,7 +86,7 @@ public class GreogorianBirthdayConstraint
       case 6:
       case 9:
       case 11:
-        if (!range(1, 30).includeʔ(dayOfBirth)) {
+        if (!range(1, 30).contains(dayOfBirth)) {
           return new FactorConstraintError(value.getClass(),
               "Day of birth must be between 1 and 30");
         }
@@ -92,6 +94,11 @@ public class GreogorianBirthdayConstraint
     }
 
     return null;
+  }
+
+  private ContiguousSet<Integer> range(int start, int end) {
+    return ContiguousSet.create(Range.closed(start, end),
+        DiscreteDomain.integers());
   }
 
 }
